@@ -15,6 +15,8 @@ namespace ProjectMVC.DAL.Data
             optionsBuilder.UseSqlServer("Server = . ; Database = ProjectMVC ; Trusted_Connection = True");
         }
 
+         ///////////////////////////////
+         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());    
