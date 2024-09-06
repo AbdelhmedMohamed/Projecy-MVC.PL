@@ -1,6 +1,6 @@
 using System;
 
-namespace Projecy_MVC.PL.Models
+namespace Projecy_MVC.PL.ViewModels
 {
     public class ErrorViewModel
     {

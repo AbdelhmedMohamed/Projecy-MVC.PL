@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Projecy_MVC.PL.Models;
+
+using Projecy_MVC.PL.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
