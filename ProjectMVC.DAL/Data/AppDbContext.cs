@@ -8,12 +8,17 @@ using System.Threading.Tasks;
 
 namespace ProjectMVC.DAL.Data
 {
-    internal class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
         {
-            optionsBuilder.UseSqlServer("Server = . ; Database = ProjectMVC ; Trusted_Connection = True");
+            
         }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server = . ; Database = ProjectMVC ; Trusted_Connection = True");
+        //}
 
          ///////////////////////////////
          
