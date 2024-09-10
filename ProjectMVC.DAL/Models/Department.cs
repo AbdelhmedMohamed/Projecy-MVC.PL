@@ -18,6 +18,8 @@ namespace ProjectMVC.DAL.Models
 
         [Required(ErrorMessage = "Name is required! ")]
         public string Name { get; set; }
+
+        [Display(Name ="Date Of Creation")]
         public DateTime DataOfCreation { get; set; }
 
 
