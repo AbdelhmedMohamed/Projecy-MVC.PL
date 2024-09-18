@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 namespace ProjectMVC.DAL.Models
 {
     //Model
-    public class Department
+    public class Department :ModelBase
     {
 
-        public int Id { get; set; }
 
         [Required(ErrorMessage ="Code is required! ")]
         public string Code { get; set; }

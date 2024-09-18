@@ -1,16 +1,16 @@
-﻿@model Department
+﻿@model Employee
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Are You Sure Went To Delete This Department !?</h1>
+<h1>Are You Sure Went To Delete This Employee !?</h1>
 <br />
 <br />
 
 
 <form asp-action="Delete" asp-route-id="@Model.Id" >
 
-    <partial name="PartialViews/DetailsDeleteDepartmentPartial"></partial>
+    <partial name="PartialViews/DetailsDeleteEmployeePartial"></partial>
 
     <input type="submit" value="Delete" class="btn mt-5 btn-danger" />
     <a asp-action="Index" class="btn btn-light mt-5">Cancel</a>

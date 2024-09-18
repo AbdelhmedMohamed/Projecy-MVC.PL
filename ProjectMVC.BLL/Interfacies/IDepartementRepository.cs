@@ -7,13 +7,9 @@ using System.Threading.Tasks;
 
 namespace ProjectMVC.BLL.Interfacies
 {
-    public interface IDepartementRepository
+    public interface IDepartementRepository :IGenericRepository<Department>
     {
-        IEnumerable<Department> GetAll();
-        Department GetById(int id);
-        int  Add(Department department);
-        int  Update(Department department);
-        int  Delete(Department department);
+       //Deprtement 
 
 
 

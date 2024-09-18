@@ -38,6 +38,7 @@ namespace Projecy_MVC.PL
             });    //Default => scoped
 
             services.AddScoped<IDepartementRepository,DepartementRepository>();
+            services.AddScoped<IEmployeeRepository,EmployeeRepository>();
 
         }
 

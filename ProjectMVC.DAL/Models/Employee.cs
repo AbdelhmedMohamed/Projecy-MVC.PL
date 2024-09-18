@@ -23,9 +23,9 @@ namespace ProjectMVC.DAL.Models
         PartTime=2  
     }
 
-    public class Employee
+    public class Employee :ModelBase
     {
-        public int Id { get; set; }
+        
 
         [Required(ErrorMessage = "Name Is Required")]
         [MaxLength(50,ErrorMessage = "Max Length For Namr Is 50")]
@@ -56,7 +56,7 @@ namespace ProjectMVC.DAL.Models
 
         [Display(Name ="Hire Date")]
 
-        public DataType HireDate { get; set; }
+        public DateTime HireDate { get; set; }
 
         public bool IsDeleted {  get; set; }    
 
