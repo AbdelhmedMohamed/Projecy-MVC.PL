@@ -7,22 +7,27 @@ using System;
 
 namespace Projecy_MVC.PL.Controllers
 {
-    public class DepartmentController : Controller
+    public class EmployeeController : Controller
     {
-        private readonly IDepartementRepository _departmentRepository;
+
+        private readonly IEmployeeRepository _EmployeeRepository;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartementRepository repository, IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository repository, IWebHostEnvironment env)
         {
-            _departmentRepository = repository;
+            _EmployeeRepository = repository;
             _env = env;
         }
 
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();      
+            var Employees = _EmployeeRepository.GetAll();
 
-            return View(departments);
+            ViewData["Message"] = "Hello in View Data";
+
+            ViewBag.Message = "Hello in View Bag ";
+
+            return View(Employees);
         }
 
         [HttpGet]
@@ -34,18 +39,25 @@ namespace Projecy_MVC.PL.Controllers
 
         [HttpPost]
 
-        public IActionResult Create(Department department)
+        public IActionResult Create(Employee Employee)
         {
             if (ModelState.IsValid)
             {
-                var count = _departmentRepository.Add(department);
+                var count = _EmployeeRepository.Add(Employee);
                 if (count > 0)
                 {
-                    return RedirectToAction(nameof(Index));
+                    //TempData
+                    TempData["Message"] = "Employee Create Succefully (TempData)";
+                    
                 }
+                else
+                {
+                    TempData["Message"] = "An Error Occurred " ;
+                }
+                return RedirectToAction(nameof(Index));
 
             }
-            return View(department);
+            return View(Employee);
         }
 
         [HttpGet]
@@ -55,11 +67,12 @@ namespace Projecy_MVC.PL.Controllers
             {
                 return BadRequest();
             }
-            var department = _departmentRepository.GetById(id.Value);
-            if (department == null) {
+            var Employee = _EmployeeRepository.GetById(id.Value);
+            if (Employee == null)
+            {
                 return NotFound();
             }
-            return View(ViewName, department);
+            return View(ViewName, Employee);
         }
 
         [HttpGet]
@@ -69,31 +82,32 @@ namespace Projecy_MVC.PL.Controllers
             //{
             //    return BadRequest();
             //}
-            //var department = _departmentRepository.GetById(id.Value);
-            //if (department == null)
+            //var Employee = _EmployeeRepository.GetById(id.Value);
+            //if (Employee == null)
             //{
             //    return NotFound();
             //}
-            //return View(department); 
+            //return View(Employee); 
 
             return Details(id, "Edit");
         }
 
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, Employee Employee)
         {
-            if (id != department.Id)
+            if (id != Employee.Id)
             {
                 return BadRequest();
             }
 
-            if (!ModelState.IsValid) {
-                return View(department);
+            if (!ModelState.IsValid)
+            {
+                return View(Employee);
             }
 
             try
             {
-                _departmentRepository.Update(department);
+                _EmployeeRepository.Update(Employee);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -104,25 +118,27 @@ namespace Projecy_MVC.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, ex.Message);
                 }
-                else {
+                else
+                {
                     ModelState.AddModelError(string.Empty, "An Erorr occured during update depatrment");
                 }
-                return View(department);
+                return View(Employee);
             }
         }
 
-        public IActionResult Delete(int? id) {
+        public IActionResult Delete(int? id)
+        {
 
             return Details(id, "Delete");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Department department)
+        public IActionResult Delete(Employee Employee)
         {
             try
             {
-                _departmentRepository.Delete(department);
+                _EmployeeRepository.Delete(Employee);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -136,11 +152,9 @@ namespace Projecy_MVC.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "An Erorr occured during deleting depatrment");
                 }
-                return View(department);
+                return View(Employee);
             }
         }
-
-
 
 
     }
