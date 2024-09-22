@@ -1,4 +1,4 @@
-﻿@model EmployeeViewModel
+﻿@model EmployeeViewModel;
 @{
     ViewData["Title"] = "Edit";
 }
@@ -9,7 +9,7 @@
 <br />
 
 
-<form asp-action="Edit">
+<form asp-action="Edit" enctype="multipart/form-data">
 
     <div asp-validation-summary="All"></div>
 

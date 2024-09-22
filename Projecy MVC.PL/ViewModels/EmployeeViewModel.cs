@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Projecy_MVC.PL.ViewModels
 {
@@ -63,7 +64,13 @@ namespace Projecy_MVC.PL.ViewModels
             public Department Department { get; set; }
 
             public int? DepartmentId { get; set; } //Fk colomn
-        }
+
+            public IFormFile Image { get; set; }
+
+            public string ImageName { get; set; }
+
+
+    }
 
 
     }
