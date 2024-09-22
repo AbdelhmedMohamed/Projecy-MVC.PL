@@ -11,6 +11,8 @@ namespace ProjectMVC.BLL.Interfacies
     {
         //Employee
         IQueryable<Employee> GetEmployeeByAddress(string address);
+
+        IQueryable<Employee> GetEmployeeByName(string name);
         
 
 

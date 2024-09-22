@@ -21,6 +21,10 @@ namespace ProjectMVC.DAL.Models
         [Display(Name ="Date Of Creation")]
         public DateTime DataOfCreation { get; set; }
 
+        //navigation property [many]
+
+        public ICollection<Employee> employees { get; set; } = new HashSet<Employee>();
+
 
 
     }

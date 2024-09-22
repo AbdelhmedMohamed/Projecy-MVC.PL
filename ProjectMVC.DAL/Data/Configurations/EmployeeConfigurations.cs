@@ -24,6 +24,9 @@ namespace ProjectMVC.DAL.Data.Configurations
                 (Gender) => Gender.ToString(),
                 (GenderAsString) =>(Gender) Enum.Parse(typeof(Gender), GenderAsString , true)
                 );
+            builder.Property(E => E.Name)
+                   .IsRequired(true)
+                   .HasMaxLength(50);
         }
     }
 }
