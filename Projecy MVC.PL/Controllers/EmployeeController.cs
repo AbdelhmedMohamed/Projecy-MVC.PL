@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Hosting;
 using ProjectMVC.BLL.Interfacies;
 using ProjectMVC.DAL.Models;
+using Projecy_MVC.PL.ViewModels;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Projecy_MVC.PL.Controllers
 {
@@ -12,38 +17,72 @@ namespace Projecy_MVC.PL.Controllers
 
         private readonly IEmployeeRepository _EmployeeRepository;
         private readonly IWebHostEnvironment _env;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository repository, IWebHostEnvironment env)
+        //private readonly IDepartementRepository _departementRepository;
+
+        public EmployeeController(IEmployeeRepository repository, IWebHostEnvironment env /*IDepartementRepository departementRepository*/ , IMapper mapper )
         {
             _EmployeeRepository = repository;
             _env = env;
+            _mapper = mapper;
+            //_departementRepository = departementRepository;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string searchInp )
         {
-            var Employees = _EmployeeRepository.GetAll();
+            if (string.IsNullOrEmpty(searchInp))
+            {
+                var Employees = _EmployeeRepository.GetAll();
+                var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Employees);
+                return View(mappedEmp);
+            }
+            else
+            {
+                var Employees = _EmployeeRepository.GetEmployeeByName(searchInp.ToLower());
+                var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Employees);
+                return View(mappedEmp); 
+            }
+           
 
             ViewData["Message"] = "Hello in View Data";
 
             ViewBag.Message = "Hello in View Bag ";
 
-            return View(Employees);
+           
         }
 
         [HttpGet]
 
         public IActionResult Create()
         {
+           // ViewData["Departments"] = _departementRepository.GetAll();
+            //ViewBag.Departments = _departementRepository.GetAll(); 
             return View();
         }
 
         [HttpPost]
 
-        public IActionResult Create(Employee Employee)
+        public IActionResult Create(EmployeeViewModel EmployeeVM) 
         {
             if (ModelState.IsValid)
             {
-                var count = _EmployeeRepository.Add(Employee);
+                //mannual mapping
+                //var mappedEmp = new Employee()
+                //{
+                //    Name = EmployeeVM.Name,
+                //    Age = EmployeeVM.Age,
+                //    Address = EmployeeVM.Address,
+                //    Salary = EmployeeVM.Salary,
+                //    Email = EmployeeVM.Email,
+                //    PhoneNumber = EmployeeVM.PhoneNumber,
+                //    IsActive = EmployeeVM.IsActive,
+                //    HireDate = EmployeeVM.HireDate,
+
+
+                //};
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
+                var count = _EmployeeRepository.Add(mappedEmp);
                 if (count > 0)
                 {
                     //TempData
@@ -57,7 +96,7 @@ namespace Projecy_MVC.PL.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-            return View(Employee);
+            return View(EmployeeVM);
         }
 
         [HttpGet]
@@ -68,6 +107,7 @@ namespace Projecy_MVC.PL.Controllers
                 return BadRequest();
             }
             var Employee = _EmployeeRepository.GetById(id.Value);
+            //ViewBag.Departments = _departementRepository.GetAll();
             if (Employee == null)
             {
                 return NotFound();
@@ -93,21 +133,22 @@ namespace Projecy_MVC.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit([FromRoute] int id, Employee Employee)
+        public IActionResult Edit([FromRoute] int id, EmployeeViewModel EmployeeVM)
         {
-            if (id != Employee.Id)
+            if (id != EmployeeVM.Id)
             {
                 return BadRequest();
             }
 
             if (!ModelState.IsValid)
             {
-                return View(Employee);
+                return View(EmployeeVM);
             }
 
             try
             {
-                _EmployeeRepository.Update(Employee);
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
+                _EmployeeRepository.Update(mappedEmp);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -122,7 +163,7 @@ namespace Projecy_MVC.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "An Erorr occured during update depatrment");
                 }
-                return View(Employee);
+                return View(EmployeeVM);
             }
         }
 
@@ -134,11 +175,12 @@ namespace Projecy_MVC.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Employee Employee)
+        public IActionResult Delete(EmployeeViewModel EmployeeVM)
         {
             try
             {
-                _EmployeeRepository.Delete(Employee);
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
+                _EmployeeRepository.Delete(mappedEmp);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -152,7 +194,7 @@ namespace Projecy_MVC.PL.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "An Erorr occured during deleting depatrment");
                 }
-                return View(Employee);
+                return View(EmployeeVM);
             }
         }
 

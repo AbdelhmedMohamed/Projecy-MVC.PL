@@ -17,6 +17,10 @@ namespace ProjectMVC.DAL.Data.Configurations
 
             builder.Property(D => D.Id).UseIdentityColumn(10,10);
 
+            builder.HasMany(D => D.employees)
+                   .WithOne(E => E.Department)
+                   .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

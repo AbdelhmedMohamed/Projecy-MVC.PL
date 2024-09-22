@@ -9,6 +9,8 @@ using ProjectMVC.BLL.Interfacies;
 using ProjectMVC.BLL.Repositories;
 using ProjectMVC.DAL.Data;
 using ProjectMVC.DAL.Models;
+using Projecy_MVC.PL.Extensions;
+using Projecy_MVC.PL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,8 +39,8 @@ namespace Projecy_MVC.PL
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });    //Default => scoped
 
-            services.AddScoped<IDepartementRepository,DepartementRepository>();
-            services.AddScoped<IEmployeeRepository,EmployeeRepository>();
+            services.AddApplicationServices();
+            services.AddAutoMapper(M=>M.AddProfile(new mappingProfiles()));
 
         }
 
