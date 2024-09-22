@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Hosting;
 using ProjectMVC.BLL.Interfacies;
 using ProjectMVC.DAL.Models;
+using Projecy_MVC.PL.Helpers;
 using Projecy_MVC.PL.ViewModels;
 using System;
 using System.Collections;
@@ -45,9 +46,9 @@ namespace Projecy_MVC.PL.Controllers
             }
            
 
-            ViewData["Message"] = "Hello in View Data";
+           // ViewData["Message"] = "Hello in View Data";
 
-            ViewBag.Message = "Hello in View Bag ";
+           // ViewBag.Message = "Hello in View Bag ";
 
            
         }
@@ -77,22 +78,22 @@ namespace Projecy_MVC.PL.Controllers
                 //    Email = EmployeeVM.Email,
                 //    PhoneNumber = EmployeeVM.PhoneNumber,
                 //    IsActive = EmployeeVM.IsActive,
-                //    HireDate = EmployeeVM.HireDate,
+                //    HireDate = EmployeeVM.HireDate, //};
 
+                EmployeeVM.ImageName = DocumentSettings.UploadFile(EmployeeVM.Image, "Images");
 
-                //};
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
                 var count = _EmployeeRepository.Add(mappedEmp);
-                if (count > 0)
-                {
-                    //TempData
-                    TempData["Message"] = "Employee Create Succefully (TempData)";
+                //if (count > 0)
+                //{
+                //    //TempData
+                //    TempData["Message"] = "Employee Create Succefully (TempData)";
                     
-                }
-                else
-                {
-                    TempData["Message"] = "An Error Occurred " ;
-                }
+                //}
+                //else
+                //{
+                //    TempData["Message"] = "An Error Occurred " ;
+                //}
                 return RedirectToAction(nameof(Index));
 
             }
@@ -147,6 +148,8 @@ namespace Projecy_MVC.PL.Controllers
 
             try
             {
+                EmployeeVM.ImageName = DocumentSettings.UploadFile(EmployeeVM.Image, "Images");
+
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
                 _EmployeeRepository.Update(mappedEmp);
 
@@ -181,6 +184,7 @@ namespace Projecy_MVC.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
                 _EmployeeRepository.Delete(mappedEmp);
+                DocumentSettings.DeleteFile(EmployeeVM.ImageName, "Images"); 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
