@@ -19,17 +19,17 @@ namespace ProjectMVC.BLL.Repositories
             _dbcontext = dbContext;
         }
 
-        public int Add(T item)
+        public void Add(T item)
         {
             _dbcontext.Set<T>().Add(item);
             //_dbcontext.Add(item);
-            return _dbcontext.SaveChanges();
+            //return _dbcontext.SaveChanges();
         }
 
-        public int Delete(T item)
+        public void Delete(T item)
         {
             _dbcontext.Set<T>().Remove(item);
-            return _dbcontext.SaveChanges();
+            //return _dbcontext.SaveChanges();
         }
 
         public IEnumerable<T> GetAll()
@@ -49,10 +49,10 @@ namespace ProjectMVC.BLL.Repositories
             return _dbcontext.Set<T>().Find(id);
         }
 
-        public int Update(T item)
+        public void Update(T item)
         {
             _dbcontext.Set<T>().Update(item);
-            return _dbcontext.SaveChanges();
+            //return _dbcontext.SaveChanges();
         }
     }
 }

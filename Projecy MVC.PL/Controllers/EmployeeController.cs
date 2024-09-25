@@ -16,15 +16,17 @@ namespace Projecy_MVC.PL.Controllers
     public class EmployeeController : Controller
     {
 
-        private readonly IEmployeeRepository _EmployeeRepository;
+        //private readonly IEmployeeRepository _EmployeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _env;
         private readonly IMapper _mapper;
 
         //private readonly IDepartementRepository _departementRepository;
 
-        public EmployeeController(IEmployeeRepository repository, IWebHostEnvironment env /*IDepartementRepository departementRepository*/ , IMapper mapper )
+        public EmployeeController(IUnitOfWork unitOfWork, IWebHostEnvironment env /*IDepartementRepository departementRepository*/ , IMapper mapper )
         {
-            _EmployeeRepository = repository;
+           // _EmployeeRepository = repository;
+            _unitOfWork = unitOfWork;
             _env = env;
             _mapper = mapper;
             //_departementRepository = departementRepository;
@@ -34,13 +36,13 @@ namespace Projecy_MVC.PL.Controllers
         {
             if (string.IsNullOrEmpty(searchInp))
             {
-                var Employees = _EmployeeRepository.GetAll();
+                var Employees = _unitOfWork.EmployeeRepository.GetAll();
                 var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Employees);
                 return View(mappedEmp);
             }
             else
             {
-                var Employees = _EmployeeRepository.GetEmployeeByName(searchInp.ToLower());
+                var Employees = _unitOfWork.EmployeeRepository.GetEmployeeByName(searchInp.ToLower());
                 var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Employees);
                 return View(mappedEmp); 
             }
@@ -83,7 +85,10 @@ namespace Projecy_MVC.PL.Controllers
                 EmployeeVM.ImageName = DocumentSettings.UploadFile(EmployeeVM.Image, "Images");
 
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
-                var count = _EmployeeRepository.Add(mappedEmp);
+                _unitOfWork.EmployeeRepository.Add(mappedEmp); //state added
+
+                var count = _unitOfWork.Complete();
+
                 //if (count > 0)
                 //{
                 //    //TempData
@@ -107,13 +112,14 @@ namespace Projecy_MVC.PL.Controllers
             {
                 return BadRequest();
             }
-            var Employee = _EmployeeRepository.GetById(id.Value);
+            var Employee = _unitOfWork.EmployeeRepository.GetById(id.Value);
             //ViewBag.Departments = _departementRepository.GetAll();
             if (Employee == null)
             {
                 return NotFound();
             }
-            return View(ViewName, Employee);
+            var EmpVM = _mapper.Map<Employee, EmployeeViewModel>(Employee); 
+            return View(ViewName, EmpVM);
         }
 
         [HttpGet]
@@ -151,8 +157,8 @@ namespace Projecy_MVC.PL.Controllers
                 EmployeeVM.ImageName = DocumentSettings.UploadFile(EmployeeVM.Image, "Images");
 
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
-                _EmployeeRepository.Update(mappedEmp);
-
+                _unitOfWork.EmployeeRepository.Update(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -183,7 +189,8 @@ namespace Projecy_MVC.PL.Controllers
             try
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(EmployeeVM);
-                _EmployeeRepository.Delete(mappedEmp);
+                _unitOfWork.EmployeeRepository.Delete(mappedEmp);
+                _unitOfWork.Complete();
                 DocumentSettings.DeleteFile(EmployeeVM.ImageName, "Images"); 
                 return RedirectToAction(nameof(Index));
             }

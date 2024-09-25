@@ -8,8 +8,9 @@ namespace Projecy_MVC.PL.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection  services)
         {
-            services.AddScoped<IDepartementRepository, DepartementRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //services.AddScoped<IDepartementRepository, DepartementRepository>();
+            //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
