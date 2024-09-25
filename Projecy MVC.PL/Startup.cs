@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,22 @@ namespace Projecy_MVC.PL
             services.AddApplicationServices();
             services.AddAutoMapper(M=>M.AddProfile(new mappingProfiles()));
 
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                //config.Password.RequiredUniqueChars = 2;
+                //config.Password.RequireDigit = true;
+                //config.Password.RequireLowercase = true;
+                //config.Password.RequireUppercase = true;
+                //config.Password.RequireNonAlphanumeric = true;
+                //config.User.RequireUniqueEmail = true;
+                //config.Lockout.MaxFailedAccessAttempts = 3;
+                //config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,7 +78,7 @@ namespace Projecy_MVC.PL
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

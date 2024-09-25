@@ -9,18 +9,20 @@ namespace Projecy_MVC.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IDepartementRepository _departmentRepository;
+        //private readonly IDepartementRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartementRepository repository, IWebHostEnvironment env)
+        public DepartmentController(IUnitOfWork unitOfWork, IWebHostEnvironment env)
         {
-            _departmentRepository = repository;
+            //_departmentRepository = repository;
+            _unitOfWork = unitOfWork;
             _env = env;
         }
 
         public IActionResult Index()
         {
-            var departments = _departmentRepository.GetAll();      
+            var departments = _unitOfWork.DepartementRepository.GetAll();      
 
             return View(departments);
         }
@@ -38,7 +40,8 @@ namespace Projecy_MVC.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var count = _departmentRepository.Add(department);
+                 _unitOfWork.DepartementRepository.Add(department);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -55,7 +58,7 @@ namespace Projecy_MVC.PL.Controllers
             {
                 return BadRequest();
             }
-            var department = _departmentRepository.GetById(id.Value);
+            var department = _unitOfWork.DepartementRepository.GetById(id.Value);
             if (department == null) {
                 return NotFound();
             }
@@ -93,7 +96,8 @@ namespace Projecy_MVC.PL.Controllers
 
             try
             {
-                _departmentRepository.Update(department);
+                _unitOfWork.DepartementRepository.Update(department);
+                _unitOfWork.Complete();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -122,7 +126,8 @@ namespace Projecy_MVC.PL.Controllers
         {
             try
             {
-                _departmentRepository.Delete(department);
+                _unitOfWork.DepartementRepository.Delete(department);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
