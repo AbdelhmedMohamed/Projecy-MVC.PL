@@ -10,7 +10,7 @@ namespace Projecy_MVC.PL.Helpers
 		{
 			var client = new SmtpClient("smtp.gmail.com" ,587);
 			client.EnableSsl = false;
-			client.Credentials = new NetworkCredential("abdelhmedm2001@gmail.com" ,"2842001work");
+			client.Credentials = new NetworkCredential("abdelhmedm0000@gmail.com" ,"00000000");
 			client.Send("abdelhmedm2001@gmail.com" , email.Reciepints, email.Subject ,email.Body);
 
 		}
